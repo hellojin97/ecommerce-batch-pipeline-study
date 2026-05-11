@@ -1,7 +1,7 @@
 """카테고리 차원 테이블 생성기.
 
 3단계 계층 구조 (L1 > L2 > L3)를 adjacency list 형태로 출력.
-aprent_id로 self-join, depth로 필터링 연습 가능.
+parent_id로 self-join, depth로 필터링 연습 가능.
 """
 import polars as pl
 from base import make_rng
@@ -81,7 +81,7 @@ def generate(seed: int = 42) -> pl.DataFrame:
                 "name": l2_name,
                 "parent_id": l1_id,
                 "depth": 2,
-                "path": f"{l1_name} > {l2_name}"
+                "path": f"{l1_name} > {l2_name}",
             })
             for l3_name in l2_subs:
                 l3_id = next_id
@@ -91,7 +91,7 @@ def generate(seed: int = 42) -> pl.DataFrame:
                     "name": l3_name,
                     "parent_id": l2_id,
                     "depth": 3,
-                    "path": f"{l1_name} > {l2_name} > {l3_name}"
+                    "path": f"{l1_name} > {l2_name} > {l3_name}",
                 })
     
     return pl.DataFrame(rows).with_columns([
