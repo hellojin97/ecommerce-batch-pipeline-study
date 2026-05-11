@@ -14,6 +14,8 @@ from pathlib import Path
 import generate_categories
 import generate_products
 import generate_users
+import generate_orders
+import generate_order_items
 from base import load_config, write_parquet
 
 
@@ -75,6 +77,29 @@ def main() -> None:
     print("Next: orders + order_items + payments + shipments + events")
     print("=" * 64)
 
+    # 4. Orders (users에 의존, 가장 큰 팩트 테이블)
+    print("\n[4/4] Orders")
+    t0 = time.time()
+    orders = generate_orders.generate(
+        users_df=users,
+        end_date=end_date,
+        seed=seed,
+    )
+    print(f"    elapsed: {time.time() - t0:.2f}s")
 
+    # 5. Order Items (orders, products에 의존, orders도 업데이트)
+    print("\n[5/5] Order Items + Update Orders")
+    t0 = time.time()
+    order_items, orders = generate_order_items.generate(
+        orders_df=orders,
+        products_df=products,
+        seed=seed,
+    )
+    print(f"    elapsed: {time.time() - t0:.2f}s")
+
+    # 이제 두 팩트 테이블 저장 (둘 다 dt 파티션)
+    print("\nWriting partitioned facts...")
+    write_parquet(orders, output_dir / "orders", partition_by=["dt"])
+    write_parquet(order_items, output_dir / "order_items", partition_by=["dt"])
 if __name__ == "__main__":
     main()
