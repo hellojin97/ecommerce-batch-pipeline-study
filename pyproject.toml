@@ -1,0 +1,14 @@
+[project]
+name = "ecommerce-batch-pipeline-study"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "hellojin97", email = "ilhj1228@gmail.com" }
+]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "numpy>=2.4.4",
+    "polars>=1.40.1",
+    "pyyaml>=6.0.3",
+]
