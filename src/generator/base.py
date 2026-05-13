@@ -15,7 +15,7 @@ import yaml
 
 def load_config(path: str = 'config.yml') -> dict:
     """YAML 설정 파일 로드."""
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 
